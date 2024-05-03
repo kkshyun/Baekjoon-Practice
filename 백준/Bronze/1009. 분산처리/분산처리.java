@@ -16,9 +16,7 @@ public class Main {
             result[i] = resultFunc(a,b);
         }
         for (int i = 0; i < num; i++) {
-            if(result[i] == 0)
-                System.out.println(10);
-            else System.out.println(result[i]);
+            System.out.println(result[i]);
         }
     }
     public static int resultFunc(int a,int b) {
