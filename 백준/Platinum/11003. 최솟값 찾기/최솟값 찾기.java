@@ -21,7 +21,7 @@ public class Main {
 
 
         for(int i = 1 ; i < N ; i++) {
-            while (deque.size()!=0) {
+            while (!deque.isEmpty()) {
                 // 넣으려는 수보다 마지막에 존재하는 값이 크거나 같을 때 마지막 제거
                 if(deque.getLast()[1] >= numArr[i]){
                     deque.removeLast();
@@ -41,10 +41,9 @@ public class Main {
             // 윈도우 크기 : L 비교
             // 만약 L이 3이고 i 10이면 8 9 10까지만 오케이
 
-            int first = deque.getFirst()[0];
-            while(deque.size()!=1 && i-L+1>0 && first < i-L+1 ) {
+
+            while(deque.getFirst()[0]<=i-L) {
                 deque.removeFirst();
-                first = deque.getFirst()[0];
             }
 
             bw.write(deque.getFirst()[1] + " ");
