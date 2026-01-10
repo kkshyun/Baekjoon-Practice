@@ -1,57 +1,37 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
-    static boolean[] visited;
-    static List<Integer>[] list;
-    static int m;
-    static int n;
+    static int N,M;
+    static int[] result;
     static BufferedWriter bw;
-
+    static boolean[] used;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        String[] str = br.readLine().split(" ");
-        n = Integer.parseInt(str[0]);
-        m = Integer.parseInt(str[1]);
-        list = new ArrayList[n+1];
-        for (int i = 1; i <= n; i++) {
-            list[i] = new ArrayList<>();
-            for (int j = 1; j <= n; j++) {
-                if(i!=j) {
-                    list[i].add(j);
-                }
-            }
-        }
-
-
-        for (int i = 1; i <= n; i++) {
-            List<Integer> temp = new ArrayList<>();
-            visited = new boolean[n+1];
-            DFS(1,i,temp);
-        }
+        String[] s = br.readLine().split(" ");
+        N = Integer.parseInt(s[0]);
+        M = Integer.parseInt(s[1]);
+        result = new int[M];
+        used = new boolean[N+1];
+        combination(0);
         bw.flush();
         bw.close();
     }
-    public static void DFS(int depth, int n, List<Integer> temp) throws IOException {
-        if(visited[n])
-            return;
-        temp.add(n);
-        visited[n]=true;
-        if(depth==m) {
-            for (int i: temp) {
-                bw.write(i+" ");
+    public static void combination(int depth) throws IOException{
+        if(depth == M) {
+            for (int i = 0; i < result.length; i++) {
+                bw.write(result[i]+" ");
             }
             bw.write("\n");
-        } else {
-            for(int node: list[n]) {
-                if(!visited[node]) {
-                    DFS(depth+1,node,temp);
-                }
-            }
+            return;
         }
-        temp.remove(temp.size() - 1);
-        visited[n]=false;
+        for (int i = 1; i <= N; i++) {
+            if(used[i])
+                continue;
+            used[i] = true;
+            result[depth] = i;
+            combination(depth+1);
+            used[i] = false;
+        }
     }
 }
