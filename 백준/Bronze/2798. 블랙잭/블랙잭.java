@@ -1,47 +1,38 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
-    static int N,M;
-    static int max = 0;
-    static int[] visited, arr;
+    static int N, M;
+    static int[] arr, result;
+    static int maxSum = 0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] s = br.readLine().split(" ");
-        N = Integer.parseInt(s[0]);
-        M = Integer.parseInt(s[1]);
-        s = br.readLine().split(" ");
+        String[] str = br.readLine().split(" ");
+        N = Integer.parseInt(str[0]);
+        M = Integer.parseInt(str[1]);
         arr = new int[N];
-        visited = new int[N];
+        result = new int[3];
+        str = br.readLine().split(" ");
         for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(s[i]);
+            arr[i] = Integer.parseInt(str[i]);
         }
-
-        for (int i = 0; i < N; i++) {
-            visited = new int[N];
-            if(arr[i]<=M)
-                dfs(i,0,0);
-        }
-        System.out.println(max);
-
+        combination(0,0);
+        System.out.println(maxSum);
     }
-    public static void dfs(int index, int result ,int depth) {
-        result += arr[index];
-        visited[index] = 1;
-        depth++;
-        if(depth==3) {
-            if(max<result)
-                max = result;
-            visited[index] = 0;
+    public static void combination(int start, int r) {
+        if(r == 3) {
+            int sum = 0;
+            for (int i = 0; i < 3; i++) {
+                sum += result[i];
+            }
+            if(sum <= M)
+                maxSum = Math.max(maxSum, sum);
             return;
         }
-        for (int i = 1; i < N; i++) {
-            if(visited[i]!=1&&(result+arr[i])<=M) {
-                dfs(i,result,depth);
-            }
+        for (int i = start; i < N; i++) {
+            result[r] = arr[i];
+            combination(i+1, r+1);
         }
-        visited[index] = 0;
     }
 }
