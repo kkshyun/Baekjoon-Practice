@@ -3,37 +3,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    static int[] arr;
-    static long result;
+    static int K, N;
+    static int[] kLength;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] s = br.readLine().split(" ");
-        int K = Integer.parseInt(s[0]);
-        int N = Integer.parseInt(s[1]);
-        arr = new int[K];
-        int max = 0;
+        K = Integer.parseInt(s[0]);
+        N = Integer.parseInt(s[1]);
+        kLength = new int[K];
+        long max = 0;
         for (int i = 0; i < K; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
-            max = Math.max(max,arr[i]);
+            kLength[i] = Integer.parseInt(br.readLine());
+            max = Math.max(max, kLength[i]);
         }
-        binarySearch(N, 1, max);
-        System.out.println(result);
+        System.out.println(binarySearch(1,max+1)-1);
     }
 
-    public static void binarySearch(int key, long low, long high) {
-        result = 0;
-        while(low <= high) {
-            long mid = (low + high) / 2;
-            long sum = 0;
-            for (int i = 0; i < arr.length; i++) {
-                sum += arr[i] / mid;
+    public static long binarySearch(long start, long end) {
+        long mid, count;
+        while(start < end) {
+            mid = (start + end) / 2;
+            count = 0;
+            for (int i = 0; i < K; i++) {
+                count += kLength[i] / mid;
             }
-            if(sum >= key) {
-                if(result <= mid)
-                    result = mid;
-                low = mid + 1;
-            } else if(sum < key)
-                high = mid - 1;
+            if(count < N)
+                end = mid;
+            else
+                start = mid + 1;
         }
+        return end;
     }
 }
