@@ -5,27 +5,21 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String original = br.readLine();
-        String[] numbers = original.split("-|\\+");
-        String[] str = original.split("");
-
-        int result = 0;
-        int count = 0;
-        int check = 1;
-
-        result += Integer.parseInt(numbers[0]);
-        count++;
-
-        for(String sCheck : str) {
-            if(sCheck.equals("-")||sCheck.equals("+")) {
-                if(sCheck.equals("-")) {
-                    check = -1;
-                }
-                result += Integer.parseInt(numbers[count])*check;
-                count++;
+        String[] tokens = br.readLine().split("-");
+        int max = 0;
+        int sum = 0;
+        for (int i = 0; i < tokens.length; i++) {
+            max = 0;
+            String[] s = tokens[i].split("\\+");
+            for (int j = 0; j < s.length; j++) {
+                max += Integer.parseInt(s[j]);
+            }
+            if(i == 0) {
+                sum += max;
+            } else {
+                sum -= max;
             }
         }
-        System.out.println(result);
-
+        System.out.println(sum);
     }
 }
