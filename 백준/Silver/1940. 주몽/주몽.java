@@ -2,39 +2,35 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int m = Integer.parseInt(br.readLine());
-        int count = 0;
-
-        String[] str = br.readLine().split(" ");
-        int[] nArr = new int[n];
-        for (int i = 0; i < n; i++) {
-            nArr[i] = Integer.parseInt(str[i]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        int[] arr = new int[N];
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        int[] array = Arrays.stream(nArr).sorted().toArray();
-//        for (int i = 0; i < array.length; i++) {
-//            System.out.print(array[i]+" ");
-//        }
-
-        int start_index = 0;
-        int end_index = array.length-1;
-
-        while(start_index < end_index) {
-            if(array[start_index] + array[end_index] < m) {
-                start_index++;
-            } else if(array[start_index] + array[end_index] > m) {
-                end_index--;
-            } else if(array[start_index] + array[end_index] == m) {
+        Arrays.sort(arr);
+        int startIndex = 0;
+        int endIndex = N-1;
+        int sum = arr[startIndex] + arr[endIndex];
+        int count = 0;
+        while(startIndex < endIndex) {
+            if(sum > M) {
+                sum += -arr[endIndex--] + arr[endIndex];
+            } else if(sum < M) {
+                sum += -arr[startIndex++] + arr[startIndex];
+            } else {
                 count++;
-                start_index++;
-                end_index--;
+                sum += -arr[endIndex--] -arr[startIndex++] + arr[endIndex] + arr[startIndex];
             }
         }
-        System.out.print(count);
+        System.out.println(count);
     }
 }
