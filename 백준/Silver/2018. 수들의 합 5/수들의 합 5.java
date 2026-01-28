@@ -1,28 +1,32 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-
-        long result = 0;
-        long count = 0;
-        for (int i = 1; i <= n; i++) {
-            result = 0;
-            for (int j = i; j <= n ; j++) {
-                if(result <= n) {
-                    result += j;
-                    if(result == n) {
-                        count ++;
-                        break;
-                    }
-                }else {
-                    break;
-                }
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int count = 0;
+        int sum = 0;
+        int startIndex = 0;
+        int endIndex = 0;
+        while(startIndex <= endIndex) {
+            if(sum > N) {
+                sum -= startIndex;
+                startIndex++;
+            } else if(sum < N) {
+                endIndex++;
+                sum += endIndex;
+            } else {
+                count++;
+                sum -= startIndex;
+                startIndex++;
+                endIndex++;
+                sum += endIndex;
             }
         }
-        System.out.print(count);
+        System.out.println(count);
     }
 }
