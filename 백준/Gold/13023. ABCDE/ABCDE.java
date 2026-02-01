@@ -2,47 +2,50 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-    static ArrayList<Integer>[] A;
+    static boolean check = false;
     static boolean[] visited;
-    static boolean result;
+    static ArrayList<Integer>[] graph;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] str = br.readLine().split(" ");
-        int node = Integer.parseInt(str[0]);
-        int edge = Integer.parseInt(str[1]);
-        A = new ArrayList[node];
-        visited = new boolean[node];
-        for (int i = 0; i < node; i++) {
-            A[i] = new ArrayList<Integer>();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        visited = new boolean[N];
+        graph = new ArrayList[N];
+        for (int i = 0; i < N; i++) {
+            graph[i] = new ArrayList<>();
         }
-        for (int i = 0; i < edge; i++) {
-            str = br.readLine().split(" ");
-            int s = Integer.parseInt(str[0]);
-            int e = Integer.parseInt(str[1]);
-            A[s].add(e);
-            A[e].add(s);
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
         }
-
-        for (int i = 0; i < node; i++) {
-            DFS(1,i);
-            if(result) break;
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(visited, false);
+            dfs(i,1);
+            if(check) {
+                System.out.println("1");
+                return;
+            }
         }
-        if(result)System.out.println("1");
-        else System.out.println("0");
+        System.out.println("0");
     }
-
-    static void DFS(int depth, int n) {
-        if (result||depth==5) {
-            result = true;
+    static void dfs(int start, int depth) {
+        if(depth == 5) {
+            check = true;
             return;
         }
-        visited[n] = true;
-        for (int node : A[n]) {
-            if (!visited[node])
-                DFS(depth+1, node);
+        visited[start] = true;
+        for(int next : graph[start]) {
+            if(!visited[next])
+                dfs(next, depth+1);
         }
-        visited[n] = false;
+        visited[start] = false;
     }
 }
