@@ -2,48 +2,45 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
-    static ArrayList<Integer>[] A;
+    static ArrayList<Integer>[] graph;
     static boolean[] visited;
     public static void main(String[] args) throws IOException {
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
-        String[] str = br.readLine().split(" ");
-        int n = Integer.parseInt(str[0]);
-        int m = Integer.parseInt(str[1]);
-        A = new ArrayList[n+1];
-        visited = new boolean[n+1];
-        // 인접리스트 초기화하기
-        for (int i = 1; i < n+1; i++) {
-            A[i] = new ArrayList<Integer>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        graph = new ArrayList[N];
+        visited = new boolean[N];
+        for (int i = 0; i < N; i++) {
+            graph[i] = new ArrayList<>();
         }
-        for (int i = 0; i < m; i++) {
-            str = br.readLine().split(" ");
-            int s = Integer.parseInt(str[0]);
-            int e = Integer.parseInt(str[1]);
-            // 양방향 에지이므로 양쪽에 에지를 더해줘야함
-            A[s].add(e);
-            A[e].add(s);
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken()) - 1;
+            int b = Integer.parseInt(st.nextToken()) - 1;
+            graph[a].add(b);
+            graph[b].add(a);
         }
         int count = 0;
-        for (int i = 1; i < n+1; i++) {
-            // 방문하지 않은 노드가 없을 때까지 반복
+        for (int i = 0; i < N; i++) {
             if(!visited[i]) {
+                dfs(i);
                 count++;
-                DFS(i);
             }
         }
         System.out.println(count);
     }
-    
-    static void DFS(int v) {
-        if(visited[v])
+
+    public static void dfs(int start) {
+        if(visited[start])
             return;
-        visited[v] = true;
-        for(int i : A[v]) {
-            // 연결 노드 중 방문하지 않았던 노드만 탐색하기
-            if(visited[i] == false)
-                DFS(i);
+        visited[start] = true;
+        for(int next : graph[start]) {
+            if(!visited[next])
+                dfs(next);
         }
     }
 }
