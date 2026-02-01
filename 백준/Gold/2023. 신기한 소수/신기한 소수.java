@@ -1,34 +1,44 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    static int n;
-    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringBuilder sb;
+    static int N;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        DFS(1,2);
-        DFS(1,3);
-        DFS(1,5);
-        DFS(1,7);
-        bw.flush();
-        bw.close();
+        sb = new StringBuilder();
+        N = Integer.parseInt(br.readLine());
+        dfs(2,1);
+        dfs(3,1);
+        dfs(5,1);
+        dfs(7,1);
+        System.out.println(sb);
     }
 
-    public static void DFS(int digit, long s) throws IOException {
-        if(!checkPrimeNumber(s))
+    static void dfs(int num, int len) {
+        if(len == N) {
+            sb.append(num).append("\n");
             return;
-        if(digit == n)
-            bw.write(s + "\n");
-        digit++;
-        long num = s*10;
-        for (int i = 1; i <= 9; i+=2) { // 1,3,5,7,9
-            DFS(digit,num+i);
+        }
+
+        int[] cand = {1,3,5,7,9};
+        for(int c : cand) {
+            int next = num*10 + c;
+            if(isPrime(next)) {
+                dfs(next, len+1);
+            }
         }
     }
 
-    public static boolean checkPrimeNumber(long n) {
-        for (int i = 2; i < n/2; i++) {
-            if(n%i==0)
+    static boolean isPrime(int num) {
+        if(num < 2)
+            return false;
+        if(num % 2 == 0)
+            return num == 2;
+        for (int i = 3; (long)i * i <= num; i += 2) {
+            if(num % i == 0)
                 return false;
         }
         return true;
