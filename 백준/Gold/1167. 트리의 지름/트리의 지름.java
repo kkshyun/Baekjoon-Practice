@@ -1,66 +1,70 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static boolean visited[];
-    static int[] distance;
-    static ArrayList<Edge>[] A;
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        A = new ArrayList[N+1];
-        for (int i = 1 ; i <= N ; i++) {
-            A[i] = new ArrayList<Edge>();
+    static class Edge {
+        int end;
+        int value;
+        public Edge(int end, int value) {
+            this.end = end;
+            this.value = value;
         }
+    }
+    static int[] dist;
+    static ArrayList<Edge>[] tree;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        tree = new ArrayList[N+1];
+        for (int i = 0; i < tree.length; i++) {
+            tree[i] = new ArrayList<Edge>();
+        }
+        dist = new int[N+1];
+        Arrays.fill(dist, -1);
         for (int i = 0; i < N; i++) {
-            int S = sc.nextInt();
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int node = Integer.parseInt(st.nextToken());
+            int nextNode;
+            int nextValue;
             while(true) {
-                int E = sc.nextInt();
-                if(E == -1)
+                nextNode = Integer.parseInt(st.nextToken());
+                if(nextNode == -1)
                     break;
-                int V = sc.nextInt();
-                A[S].add(new Edge(E,V));
+                nextValue = Integer.parseInt(st.nextToken());
+                tree[node].add(new Edge(nextNode,nextValue));
             }
         }
-        distance = new int[N+1];
-        visited = new boolean[N+1];
-        BFS(1);
-        int Max = 1;
-        // distance 배열에서 가장 큰 값을 다시 시작점으로 설정
-        for (int i = 2; i <= N ; i++) {
-            if(distance[Max] < distance[i])
-                Max = i;
+        bfs(1);
+        int maxIndex = 0;
+        for (int i = 0; i < N + 1; i++) {
+            if(dist[maxIndex] < dist[i])
+                maxIndex = i;
         }
-        distance = new int[N+1];
-        visited = new boolean[N+1];
-        BFS(Max);
-        Arrays.sort(distance);
-        System.out.println(distance[N]);
-
+        Arrays.fill(dist, -1);
+        bfs(maxIndex);
+        int result = 0;
+        for (int i = 0; i < N + 1; i++) {
+            result = Math.max(result, dist[i]);
+        }
+        System.out.println(result);
     }
-    static void BFS(int index) {
-        Queue<Integer> queue = new LinkedList<Integer>();
-        queue.add(index);
-        visited[index] = true;
+    static void bfs(int start) {
+        Queue<Edge> queue = new ArrayDeque<>();
+        dist[start] = 0;
+        for(Edge next : tree[start]) {
+            dist[next.end] = next.value;
+            queue.add(next);
+        }
         while(!queue.isEmpty()) {
-            int now_node = queue.poll();
-            for(Edge i : A[now_node]) {
-                int e = i.e;
-                int v = i.value;
-                if(!visited[e]) {
-                    visited[e] = true;
-                    queue.add(e);
-                    distance[e] = distance[now_node]+v;
+            Edge poll = queue.poll();
+            for(Edge next : tree[poll.end]) {
+                if(dist[next.end] == -1) {
+                    dist[next.end] = poll.value + next.value;
+                    queue.add(new Edge(next.end, dist[next.end]));
                 }
             }
-        }
-    }
-    static class Edge {
-        int e;
-        int value;
-
-        public Edge(int e, int value) {
-            this.e = e;
-            this.value = value;
         }
     }
 }
