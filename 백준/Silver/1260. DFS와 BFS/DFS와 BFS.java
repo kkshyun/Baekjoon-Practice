@@ -1,67 +1,63 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static ArrayList<Integer>[] A;
-    static Queue<Integer> queue = new LinkedList<>();
     static boolean[] visited;
-    static boolean DFSResult = false;
-    static boolean BFSResult;
-
-    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static ArrayList<Integer>[] graph;
+    static StringBuilder sb;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] str = br.readLine().split(" ");
-        int node = Integer.parseInt(str[0]);
-        int edge = Integer.parseInt(str[1]);
-        int start = Integer.parseInt(str[2]);
-        A = new ArrayList[node+1];
-        visited = new boolean[node+1];
-        for (int i = 1; i <= node; i++) {
-            A[i] = new ArrayList<Integer>();
+        sb = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        int V = Integer.parseInt(st.nextToken());
+        graph = new ArrayList[N+1];
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new ArrayList<>();
         }
-        for (int i = 0; i < edge; i++) {
-            str = br.readLine().split(" ");
-            int s = Integer.parseInt(str[0]);
-            int e = Integer.parseInt(str[1]);
-            A[s].add(e);
-            A[e].add(s);
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
         }
-        for (int i = 1; i <= node; i++) {
-            A[i].sort((a, b) -> a - b);
+        for (int i = 0; i < graph.length; i++) {
+            Collections.sort(graph[i]);
         }
-        DFS(start);
-        bw.write("\n");
-        visited = new boolean[node+1];
-        queue.add(start);
-        visited[start] = true;
-        while(!queue.isEmpty()){
-            BFS();
-        }
-        bw.flush();
-        bw.close();
+        visited = new boolean[N+1];
+        dfs(V);
+        sb.append("\n");
+        Arrays.fill(visited,false);
+        bfs(V);
+        System.out.println(sb);
     }
-
-    static void DFS(int n) throws IOException {
-        if(DFSResult || visited[n]) {
-            DFSResult = true;
+    static void dfs(int start) {
+        if(visited[start])
             return;
-        }
-        visited[n] = true;
-        bw.write(n+" ");
-        for(int i : A[n]) {
-            if(!visited[i])
-                DFS(i);
+        visited[start] = true;
+        sb.append(start).append(" ");
+        for(int next : graph[start]) {
+            if(!visited[next]) {
+                dfs(next);
+            }
         }
     }
-
-    static void BFS() throws IOException {
-        Integer poll = queue.poll();
-        bw.write(poll+" ");
-        for(int i : A[poll]) {
-            if(!visited[i]) {
-                queue.add(i);
-                visited[i] = true;
+    static void bfs(int start) {
+        visited[start] = true;
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.add(start);
+        while(!queue.isEmpty()) {
+            Integer poll = queue.poll();
+            sb.append(poll).append(" ");
+            for(int next : graph[poll]) {
+                if(!visited[next]) {
+                    visited[next] = true;
+                    queue.add(next);
+                }
             }
         }
     }
