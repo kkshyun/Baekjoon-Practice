@@ -1,76 +1,52 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static boolean[][] table;
-    static int[][] distance;
-    static int count = 0;
-    static int n;
-    static int m;
+    static int[][] graph;
+    static boolean[][] visited;
+    static int N, M;
+    static int[] dx = {-1,1,0,0};
+    static int[] dy = {0,0,-1,1};
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] str = br.readLine().split(" ");
-        n = Integer.parseInt(str[0]);
-        m = Integer.parseInt(str[1]);
-        table = new boolean[n][m];
-        distance = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            str = br.readLine().split("");
-            for (int j = 0; j < m; j++) {
-                if(Integer.parseInt(str[j])==1)
-                    table[i][j] = true;
-                else
-                    table[i][j] = false;
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        graph = new int[N][M];
+        visited = new boolean[N][M];
+        for (int i = 0; i < N; i++) {
+            String[] s = br.readLine().split("");
+            for (int j = 0; j < M; j++) {
+                graph[i][j] = Integer.parseInt(s[j]);
             }
         }
-        BFS(0,0);
-        System.out.print(distance[n - 1][m - 1]);
+        System.out.println(bfs());
     }
-    private static void BFS(int x, int y) {
-        Queue<Element> queue = new LinkedList<Element>();
-        queue.add(new Element(x,y));
-        table[x][y] = false;
-        distance[x][y] = 1;
-        while(!queue.isEmpty()) {
-            Element poll = queue.poll();
-            int pollX = poll.x;
-            int pollY = poll.y;
-            if(pollX==n-1 && pollY==m-1) {
-                return;
-            }
-            if(pollX != 0 && table[pollX-1][pollY]) {
-                queue.add(new Element(pollX-1,pollY));
-                table[pollX-1][pollY] = false;
-                distance[pollX - 1][pollY] = distance[pollX][pollY] + 1;
-            }
-            if(pollX != n-1 && table[pollX+1][pollY]) {
-                queue.add(new Element(pollX+1,pollY));
-                table[pollX+1][pollY] = false;
-                distance[pollX + 1][pollY] = distance[pollX][pollY] + 1;
-            }
-            if(pollY != 0 && table[pollX][pollY-1]) {
-                queue.add(new Element(pollX,pollY-1));
-                table[pollX][pollY-1] = false;
-                distance[pollX][pollY - 1] = distance[pollX][pollY] + 1;
-            }
-            if(pollY != m-1 && table[pollX][pollY+1]) {
-                queue.add(new Element(pollX,pollY+1));
-                table[pollX][pollY+1] = false;
-                distance[pollX][pollY + 1] = distance[pollX][pollY] + 1;
-            }
-        }
-    }
-    static class Element {
-        int x;
-        int y;
+    static int bfs() {
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{0, 0, 1});
+        visited[0][0] = true;
 
-        public Element(int x, int y) {
-            this.x = x;
-            this.y = y;
+        while(!queue.isEmpty()) {
+            int[] poll = queue.poll();
+            if(poll[0] == N-1 && poll[1] == M-1) {
+                return poll[2];
+            }
+            for (int i = 0; i < 4; i++) {
+                int nextX = poll[0] + dx[i];
+                int nextY = poll[1] + dy[i];
+                if(nextX >= 0 && nextX < N && nextY >= 0 && nextY < M && graph[nextX][nextY] == 1) {
+                    if(!visited[nextX][nextY]) {
+                        visited[nextX][nextY] = true;
+                        queue.add(new int[]{nextX, nextY, poll[2]+1});
+                    }
+                }
+            }
         }
+        return -1;
     }
 }
-
