@@ -1,55 +1,41 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int[] numArr;
-    static int[] findArr;
-    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+    static int[] arr;
+    static int target;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int n = Integer.parseInt(br.readLine());
-        numArr = new int[n];
-        String[] str = br.readLine().split(" ");
-        for (int i = 0; i < n; i++) {
-            numArr[i] = Integer.parseInt(str[i]);
+        StringBuilder sb = new StringBuilder();
+        int N = Integer.parseInt(br.readLine());
+        arr = new int[N];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        int m = Integer.parseInt(br.readLine());
-        findArr = new int[m];
-        str = br.readLine().split(" ");
-        for (int i = 0; i < m; i++) {
-            findArr[i] = Integer.parseInt(str[i]);
+        Arrays.sort(arr);
+        int M = Integer.parseInt(br.readLine());
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < M; i++) {
+            target = Integer.parseInt(st.nextToken());
+            sb.append(binarySearch(0, N-1)).append("\n");
         }
-
-        Arrays.sort(numArr);
-
-        for (int i = 0; i < m; i++) {
-            binarySearch(0,n-1,findArr[i]);
-        }
-
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
     }
 
-    private static void binarySearch(int startIndex, int endIndex, int target) throws IOException {
-
-        int middle = (endIndex+startIndex) / 2;
-
-        if(endIndex-startIndex<0) {
-            if(numArr[middle] != target) {
-                bw.write("0\n");
-            }
-            return;
+    static int binarySearch(int start, int end) {
+        while(start <= end) {
+            int mid = start + (end-start)/2;
+            if(arr[mid] < target)
+                start = mid + 1;
+            else if(arr[mid] > target)
+                end = mid - 1;
+            else
+                return 1;
         }
-
-        if(numArr[middle]<target)
-            binarySearch(middle+1,endIndex,target);
-        else if(numArr[middle]>target)
-            binarySearch(startIndex,middle-1,target);
-        else if(numArr[middle]==target) {
-            bw.write("1\n");
-
-        }
+        return 0;
     }
 }
