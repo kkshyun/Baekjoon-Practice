@@ -1,39 +1,31 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        String[] s = br.readLine().split(" ");
-        int m = Integer.parseInt(s[0]);
-        int n = Integer.parseInt(s[1]);
-
-        // 에라토스테네스의 체 원리 사용
-        boolean[] arr = new boolean[n+1];
-        for (int i = 2; i < n+1; i++) {
-            arr[i] = true;
-        }
-        for (int i = 2; i < n+1; i++) {
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        boolean[] arr = new boolean[N+1];
+        Arrays.fill(arr, true);
+        arr[0] = false;
+        arr[1] = false;
+        for (int i = 2; i <= Math.sqrt(N); i++) {
             if(!arr[i])
                 continue;
-//            for (int j = i*2; j < n + 1; j++) {
-//                if (j % i == 0)
-//                    arr[j] = false;
-//            }
-            int j = i;
-            int count = 2;
-            while(j*count<n+1){
-                arr[j*count] = false;
-                count++;
+            for (int j = i+i; j <= N; j+=i) {
+                arr[j] = false;
             }
         }
-        for (int i = m; i < n+1; i++) {
+        for (int i = M; i <= N; i++) {
             if(arr[i])
-                bw.write(i+"\n");
+                sb.append(i).append("\n");
         }
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
     }
 }
