@@ -1,25 +1,23 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.io.*;
+import java.util.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+class Main {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int K = Integer.parseInt(br.readLine());
-        Deque<Integer> stack = new ArrayDeque<>();
-        for (int i = 0; i < K; i++) {
-            int integer = Integer.parseInt(br.readLine());
-            if(integer != 0)
-                stack.push(integer);
-            else
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        int temp;
+        for (int i = 0; i < K ; i++) {
+            temp = Integer.parseInt(br.readLine()); 
+            if(temp == 0)
                 stack.pop();
+            else
+                stack.push(temp);
         }
         long sum = 0;
-        while(!stack.isEmpty()) {
-            sum += stack.pop();
+        for (int num : stack) {
+            sum += num;
         }
-        System.out.println(sum);
+        System.out.print(sum);
     }
 }
