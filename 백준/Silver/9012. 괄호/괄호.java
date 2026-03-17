@@ -1,35 +1,35 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        Stack<String> stack = new Stack<>();
+// The main method must be in a class named "Main".
+class Main {
+    public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int num = Integer.parseInt(br.readLine());
-
-        String[] result = new String[num];
-        for(int i = 0; i < num; i++) {
-            String str = br.readLine();
-
-            String[] arr = str.split("");
-
-            for(int j = 0; j<arr.length;j++) {
-                if(!stack.isEmpty() && stack.peek().equals("(")  && arr[j].equals(")")) {
-                    stack.pop();
-
-                } else
-                    stack.push(arr[j]);
-            }
-            if(stack.isEmpty())
-                result[i] = "YES";
-            else
-                result[i] = "NO";
+        StringBuilder sb = new StringBuilder();
+        int T = Integer.parseInt(br.readLine());
+        ArrayDeque<Character> stack = new ArrayDeque<>();
+        for (int i = 0 ; i < T ; i++ ) {
             stack.clear();
+            boolean vps = true;
+            String str = br.readLine();
+            for (int j = 0; j < str.length() ; j++) {
+                char target = str.charAt(j);
+                if(!stack.isEmpty() && target==')') {
+                    if(stack.peek()=='(')
+                        stack.pop();
+                    else {
+                        vps = false;
+                        break;
+                    }
+                } else
+                    stack.add(target);
+            }
+            if(stack.isEmpty() && vps)
+                sb.append("YES").append("\n");
+            else
+                sb.append("NO").append("\n");
         }
-        for(int i = 0; i<num; i++) {
-            System.out.println(result[i]);
-        }
+        System.out.print(sb);
     }
 }
