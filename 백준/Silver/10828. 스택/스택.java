@@ -1,48 +1,43 @@
+import java.util.*;
+import java.lang.*;
 import java.io.*;
 
-public class Main {
-    public static int[] stack;
-    public static int top = 0;
-    public static void main(String[] args) throws IOException {
+class Main {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
         int N = Integer.parseInt(br.readLine());
-        String[] s;
-        int commandResult;
-        stack = new int[N+1];
-        for (int i = 0; i < N; i++) {
-            s = br.readLine().split(" ");
-            commandResult = stack(s);
-            if(s[0].equals("push"))
-                continue;
-            bw.write(commandResult+"\n");
+        StringTokenizer st;
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < N ; i++ ) {
+            st = new StringTokenizer(br.readLine());
+            switch (st.nextToken()) {
+                case "push" :
+                        stack.push(Integer.parseInt(st.nextToken()));
+                        break;
+                case "pop" :
+                        if(stack.isEmpty())
+                            sb.append("-1\n");
+                        else
+                            sb.append(stack.pop()).append("\n");
+                        break;
+                case "size" :
+                        sb.append(stack.size()).append("\n");
+                        break;
+                case "empty" :
+                        if(stack.isEmpty())
+                            sb.append("1\n");
+                        else
+                            sb.append("0\n");
+                        break;
+                case "top" :
+                        if(stack.isEmpty())
+                            sb.append("-1\n");
+                        else
+                            sb.append(stack.peek()).append("\n");
+                        break;
+            }
         }
-        bw.flush();
-        bw.close();
-    }
-    public static int stack(String[] str) {
-        int stackResult = 0;
-        switch(str[0]) {
-            case "push" :
-                stack[++top] = Integer.parseInt(str[1]);
-                break;
-            case "pop" :
-                if(top==0) return -1;
-                int topNum = stack[top];
-                top--;
-                stackResult = topNum;
-                break;
-            case "size" :
-                stackResult = top;
-                break;
-            case "empty" :
-                stackResult = (top==0 ? 1 : 0);
-                break;
-            case "top" :
-                if(top==0) return -1;
-                stackResult = stack[top];
-                break;
-        }
-        return stackResult;
+        System.out.print(sb);
     }
 }
