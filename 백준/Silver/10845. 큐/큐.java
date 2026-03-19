@@ -1,43 +1,49 @@
+import java.util.*;
+import java.lang.*;
 import java.io.*;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+class Main {
+    public static void main(String[] args) throws Exception {
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
         int N = Integer.parseInt(br.readLine());
-        Deque<Integer> deque= new ArrayDeque<>();
-        for (int i = 0; i < N; i++) {
-            String[] s = br.readLine().split(" ");
-            if(s[0].equals("push"))
-                deque.offer(Integer.parseInt(s[1]));
-            else if(s[0].equals("pop")) {
-                if(deque.isEmpty())
-                    bw.write(-1+"\n");
-                else
-                    bw.write(deque.pollFirst()+"\n");
-            }
-            else if(s[0].equals("front")) {
-                if(deque.isEmpty())
-                    bw.write(-1+"\n");
-                else
-                    bw.write(deque.peekFirst()+"\n");
-            } else if(s[0].equals("back")) {
-                if(deque.isEmpty())
-                    bw.write(-1+"\n");
-                else
-                    bw.write(deque.peekLast()+"\n");
-            } else if(s[0].equals("size"))
-                bw.write(deque.size()+"\n");
-            else if(s[0].equals("empty")){
-                if(deque.isEmpty())
-                    bw.write(1+"\n");
-                else
-                    bw.write(0+"\n");
+        StringTokenizer st;
+        for (int i = 0; i < N ; i++) {
+            st = new StringTokenizer(br.readLine());
+            switch(st.nextToken()) {
+                case "push" :
+                    queue.add(Integer.parseInt(st.nextToken()));
+                    break;
+                case "pop" :
+                    if(queue.isEmpty())
+                        sb.append("-1\n");
+                    else
+                        sb.append(queue.poll()).append("\n");
+                    break;
+                case "size" :
+                    sb.append(queue.size()).append("\n");
+                    break;
+                case "empty" :
+                    if(queue.isEmpty())
+                        sb.append("1\n");
+                    else
+                        sb.append("0\n");
+                    break;
+                case "front" :
+                    if(queue.isEmpty())
+                        sb.append("-1\n");
+                    else
+                        sb.append(queue.peekFirst()).append("\n");
+                    break;
+                case "back" :
+                    if(queue.isEmpty())
+                        sb.append("-1\n");
+                    else
+                        sb.append(queue.peekLast()).append("\n");
+                    break;
             }
         }
-        bw.flush();
-        bw.close();
+        System.out.print(sb);
     }
 }
