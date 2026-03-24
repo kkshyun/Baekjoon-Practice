@@ -1,38 +1,26 @@
+import java.util.*;
+import java.lang.*;
 import java.io.*;
-import java.util.Arrays;
 
-public class Main {
-    static class Node{
-        int x;
-        int y;
-
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
+class Main {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
         int N = Integer.parseInt(br.readLine());
-        Node[] arr = new Node[N];
-        for (int i = 0; i < N; i++) {
-            String[] s = br.readLine().split(" ");
-            int x = Integer.parseInt(s[0]);
-            int y = Integer.parseInt(s[1]);
-            arr[i] = new Node(x,y);
-        }
-        Arrays.sort(arr,(o1,o2)-> {
-            if(o1.y == o2.y)
-                return o1.x - o2.x;
-            else
-                return o1.y - o2.y;
+        StringTokenizer st;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1,o2)-> {
+            if(o1[1] == o2[1])
+                return o1[0] - o2[0];
+            return o1[1] - o2[1];
         });
-        for (int i = 0; i < arr.length; i++) {
-            bw.write(arr[i].x +" "+arr[i].y+"\n");
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            pq.add(new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())});
         }
-        bw.flush();
-        bw.close();
+        while(!pq.isEmpty()) {
+            int[] temp = pq.poll();
+            sb.append(temp[0]).append(" ").append(temp[1]).append("\n");
+        }
+        System.out.print(sb);
     }
 }
