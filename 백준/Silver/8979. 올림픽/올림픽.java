@@ -18,7 +18,7 @@ class Main {
             else if(o1[1] != o2[1])
                 return o2[1] - o1[1];
             else
-                return o2[2] - o2[2];
+                return o2[2] - o1[2];
         });
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
