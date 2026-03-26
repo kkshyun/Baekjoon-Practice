@@ -1,27 +1,28 @@
+import java.util.*;
+import java.lang.*;
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+class Main {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
         int N = Integer.parseInt(br.readLine());
-        Set<String> set = new HashSet<>();
-        for (int i = 0; i <N; i++) {
-            set.add(br.readLine());
-        }
-        String[] arr = set.toArray(new String[0]);
-        Arrays.sort(arr, (s1, s2)-> {
-            if(s1.length() == s2.length())
-                return s1.compareTo(s2);
-            return s1.length() - s2.length();
+        PriorityQueue<String> pq = new PriorityQueue<>((o1,o2)-> {
+           if(o1.length() == o2.length())
+               return o1.compareTo(o2);
+           return o1.length() - o2.length();
         });
-        for (int i = 0; i < arr.length; i++) {
-            bw.write(arr[i]+"\n");
+        Set<String> set = new HashSet<>();
+        for(int i = 0 ; i < N ; i++) {
+            String temp = br.readLine();
+            if(!set.contains(temp)) {
+                pq.add(temp);
+                set.add(temp);
+            }
         }
-        bw.flush();
-        bw.close();
+        while(!pq.isEmpty()) {
+            sb.append(pq.poll()).append("\n");
+        }
+        System.out.print(sb);
     }
 }
