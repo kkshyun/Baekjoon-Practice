@@ -1,40 +1,31 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+class Main {
+        public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] s = br.readLine().split(" ");
-        int N = Integer.parseInt(s[0]);
-        int M = Integer.parseInt(s[1]);
-
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
         int[][] arr = new int[N][M];
-        for (int i = 0; i < N; i++) {
-            s = br.readLine().split("");
-            for (int j = 0; j < s.length; j++) {
-                arr[i][j] = Integer.parseInt(s[j]);
+        for(int i = 0 ; i < N ; i++) {
+            String[] temp = br.readLine().split("");
+            for(int j = 0 ; j < M ; j++) {
+                arr[i][j] = Integer.parseInt(temp[j]);
             }
         }
-
-        int max = 0;
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                int num = arr[i][j];
-                for (int k = Math.min(N-i, M-j) -1; k >= 0; k--) {
-                    if (num != arr[i+k][j+k])
-                        continue;
-                    if (num != arr[i][j+k])
-                        continue;
-                    if (num != arr[i+k][j])
-                        continue;
-                    max = Math.max((k+1)*(k+1), max);
-                    break;
+        int max = 1;
+        for(int i = 0 ; i < N ; i++) {
+            for(int j = 0 ; j < M ; j++) {
+                for(int k = 1 ; k < Math.min(N,M); k++) {
+                    if(i+k >= N || j + k >= M)
+                        break;
+                    if(arr[i][j] == arr[i][j+k] && arr[i][j] == arr[i+k][j] && arr[i][j] == arr[i+k][j+k])
+                        max = Math.max((k+1)*(k+1),max);
                 }
             }
         }
-        System.out.println(max);
-
+        System.out.print(max);
     }
 }
