@@ -1,53 +1,41 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-    static Map<Integer, List<Integer>> map;
-    static boolean[] check = new boolean[101];
-
-    public static void main(String[] args) throws IOException {
-
+class Main {
+    static ArrayList<Integer>[] graph;
+    static boolean[] visited;
+    static int count = 0;
+    
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int num = Integer.parseInt(br.readLine());
-        int pair = Integer.parseInt(br.readLine());
-        map = new HashMap<>();
-        int count = 0;
-
-        for (int i = 0; i < pair; i++) {
-            String[] arr = br.readLine().split(" ");
-            int parent = Integer.parseInt(arr[0]);
-            int child = Integer.parseInt(arr[1]);
-
-            List<Integer> childList = map.getOrDefault(parent, new ArrayList<>());
-            childList.add(child);
-            map.put(parent,childList);
-            List<Integer> parentList = map.getOrDefault(child, new ArrayList<>());
-            parentList.add(parent);
-            map.put(child,parentList);
+        int N = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
+        graph = new ArrayList[N + 1];
+        visited = new boolean[N + 1];
+        for(int i = 0 ; i < N+1 ; i++) {
+            graph[i] = new ArrayList<>();
         }
-
+        
+        StringTokenizer st;
+        for(int i = 0 ; i < M ; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
+        }
         dfs(1);
-        for (int i = 2; i < 101; i++) {
-            if(check[i]) {
-                count++;
-            }
-        }
-        System.out.println(count);
-
+        System.out.print(count);
     }
-    public static void dfs(int node) {
-        check[node] = true;
-        List<Integer> childList = map.getOrDefault(node,new ArrayList<>());
-        for(Integer child : childList) {
-            if(!check[child]) {
-                dfs(child);
+
+    static void dfs(int start) {
+        visited[start] = true;
+        for (int next : graph[start]) {
+            if(!visited[next]) {
+                count++;
+                dfs(next);
             }
         }
-
     }
 }
