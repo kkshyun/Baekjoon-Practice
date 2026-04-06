@@ -1,63 +1,60 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-    static int height;
-    static int[][] temp;
+class Main {
+    static int[][] graph;
+    static boolean[][] visited;
     static int[] dx = {-1,1,0,0};
     static int[] dy = {0,0,-1,1};
     static int N;
-    static int count, result;
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        int[][] arr = new int[N][N];
-        int max = 0;
-        // 입력 받기
-        for (int i = 0; i < N; i++) {
-            String[] str = br.readLine().split(" ");
-            for (int j = 0; j < N; j++) {
-                arr[i][j] = Integer.parseInt(str[j]);
-                if(arr[i][j]>max)
-                    max = arr[i][j];
+        graph = new int[N][N];
+        StringTokenizer st;
+        int maxHeight = 0;
+        for (int i = 0; i < N ; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N ; j++) {
+                int height = Integer.parseInt(st.nextToken());
+                graph[i][j] = height ;
+                maxHeight = Math.max(maxHeight, height);
             }
-
         }
 
-        result = 0;
-
-        for (int i = 1; i <= max; i++) {
-            temp = new int[N][N];
-            for (int j = 0; j < N; j++) {
-                for (int k = 0; k < N; k++) {
-                    temp[j][k] = arr[j][k];
-                }
-            }
-            count = 0;
-            height = i;
-            for (int j = 0; j < N; j++) {
-                for (int k = 0; k < N; k++) {
-                    if(temp[j][k]>=height){
-                        count++;
-                        dfs(j,k);
+        int max = 0;
+        for(int k = 0; k < maxHeight; k++) {
+            visited = new boolean[N][N];
+            int connectionCount = 0;
+            for (int i = 0; i < N ; i++) {
+                for (int j = 0; j < N ; j++) {
+                    if(graph[i][j] > k && !visited[i][j]) {
+                        connectionCount++;
+                        bfs(i,j,k);
                     }
                 }
             }
-            if(count>result)
-                result = count;
+            max = Math.max(connectionCount, max);
         }
-        System.out.println(result);
+        System.out.println(max);
     }
-
-    public static void dfs(int col, int row) {
-        temp[col][row] = 0;
-        for (int i = 0; i < 4; i++) {
-            int moveCol = col + dy[i];
-            int moveRow = row + dx[i];
-            if(moveCol>=0&&moveRow>=0&&moveCol<N&&moveRow<N&&temp[moveCol][moveRow]>=height) {
-                dfs(moveCol,moveRow);
+    
+    static void bfs(int x, int y, int k) {
+        ArrayDeque<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{x,y});
+        visited[x][y] = true;
+        while(!queue.isEmpty()) {
+            int[] now = queue.poll();
+            for(int i = 0; i < 4 ; i++) {
+                int nx = now[0] + dx[i];
+                int ny = now[1] + dy[i];
+                if(nx >= 0 && ny >= 0 && nx < N && ny < N) {
+                    if(graph[nx][ny] > k && !visited[nx][ny]) {
+                        visited[nx][ny] = true;
+                        queue.add(new int[]{nx,ny});
+                    }
+                }
             }
         }
     }
