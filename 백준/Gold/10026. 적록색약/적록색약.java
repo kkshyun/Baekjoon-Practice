@@ -1,69 +1,103 @@
+import java.util.*;
+import java.lang.*;
 import java.io.*;
 
-public class Main {
-    static int N;
+class Main {
+    static char[][] graph;
+    static boolean[][] visited;
     static int[] dx = {-1,1,0,0};
     static int[] dy = {0,0,-1,1};
-    static int color;
-    static int count;
-    public static void main(String[] args) throws IOException {
+    static int N;
+    
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
         N = Integer.parseInt(br.readLine());
-        int[][] arr = new int[N][N];
-        int[][] arrForColorBlindness = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            String s = br.readLine();
-            for (int j = 0; j < N; j++) {
-                if(s.charAt(j)=='R'){
-                    arr[i][j] = 1;
-                    arrForColorBlindness[i][j] = 1;
-                }
-                else if(s.charAt(j)=='G'){
-                    arr[i][j] = 2;
-                    arrForColorBlindness[i][j] = 1;
-                }
-                else{
-                    arr[i][j] = 3;
-                    arrForColorBlindness[i][j] = 3;
+        graph = new char[N][N];
+        visited = new boolean[N][N];
+        for(int i = 0 ; i < N ; i++) {
+            String str = br.readLine();
+            for(int j = 0 ; j < N ; j++) {
+                graph[i][j] = str.charAt(j);
+            }
+        }
+        int count = 0;
+        for(int i = 0 ; i < N ; i++) {
+            for(int j = 0 ; j < N ; j++) {
+                if(!visited[i][j]) {
+                    count++;
+                    bfs(i,j,graph[i][j]);
                 }
             }
         }
+        System.out.print(count+" ");
+        count = 0;
+        
+        for(int i = 0 ; i < N ; i++) {
+            Arrays.fill(visited[i], false);
+        }
+        
+        for(int i = 0 ; i < N ; i++) {
+            for(int j = 0 ; j < N ; j++) {
+                if(!visited[i][j]) {
+                    count++;
+                    bfsColorBlind(i,j,graph[i][j]);
+                }
+            }
+        }
+        System.out.print(count);  
+    }
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if(arr[i][j]!=0){
-                    count++;
-                    color=arr[i][j];
-                    dfs(i,j,arr);
+    static void bfs(int x, int y, char color) {
+        ArrayDeque<int[]> queue = new ArrayDeque<>();
+        visited[x][y] = true;
+        queue.add(new int[]{x,y});
+        while(!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            for(int i = 0 ; i < 4 ; i++) {
+                int nx = curr[0] + dx[i];
+                int ny = curr[1] + dy[i];
+                if(nx >= 0 && ny >= 0 && nx < N && ny < N) {
+                    if(!visited[nx][ny] && graph[nx][ny] == color) {
+                        queue.add(new int[]{nx, ny});
+                        visited[nx][ny] = true;
+                    }
                 }
             }
         }
-        bw.write(count+" ");
-        count=0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if(arrForColorBlindness[i][j]!=0){
-                    count++;
-                    color=arrForColorBlindness[i][j];
-                    dfs(i,j,arrForColorBlindness);
+    }
+
+    static void bfsColorBlind(int x, int y, char color) {
+        ArrayDeque<int[]> queue = new ArrayDeque<>();
+        visited[x][y] = true;
+        queue.add(new int[]{x,y});
+        if(color == 'R' || color == 'G') {
+            while(!queue.isEmpty()) {
+                int[] curr = queue.poll();
+                for(int i = 0 ; i < 4 ; i++) {
+                    int nx = curr[0] + dx[i];
+                    int ny = curr[1] + dy[i];
+                    if(nx >= 0 && ny >= 0 && nx < N && ny < N) {
+                        if(!visited[nx][ny] && (graph[nx][ny] == 'R' || graph[nx][ny] == 'G')) {
+                            queue.add(new int[]{nx, ny});
+                            visited[nx][ny] = true;
+                        }
+                    }
+                }
+            }
+        } else {
+            while(!queue.isEmpty()) {
+                int[] curr = queue.poll();
+                for(int i = 0 ; i < 4 ; i++) {
+                    int nx = curr[0] + dx[i];
+                    int ny = curr[1] + dy[i];
+                    if(nx >= 0 && ny >= 0 && nx < N && ny < N) {
+                        if(!visited[nx][ny] && graph[nx][ny] == color) {
+                            queue.add(new int[]{nx, ny});
+                            visited[nx][ny] = true;
+                        }
+                    }
                 }
             }
         }
-        bw.write(count+" ");
-        bw.flush();
-        bw.close();
-    }
-    public static void dfs(int x, int y, int[][] colors) {
-        colors[x][y]=0;
-        for (int i = 0; i < 4; i++) {
-            int moveX = x + dx[i];
-            int moveY = y + dy[i];
-            if(moveX>=0&&moveY>=0&&moveX<N&&moveY<N) {
-                if(color==colors[moveX][moveY])
-                    dfs(moveX,moveY,colors);
-            }
-        }
-    }
+    }  
 }
