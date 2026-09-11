@@ -1,10 +1,10 @@
 # [level 2] 조건에 맞는 도서와 저자 리스트 출력하기 - 144854 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/144854) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/144854?utm_source=chatgpt.com) 
 
 ### 성능 요약
 
-메모리: 0.0 MB, 시간: 0.00 ms
+메모리: undefined, 시간: 
 
 ### 구분
 
@@ -12,11 +12,11 @@
 
 ### 채점결과
 
-Empty
+합계: 100.0 / 100.0
 
 ### 제출 일자
 
-2026년 02월 17일 17:03:43
+2026년 09월 11일 18:26:30
 
 ### 문제 설명
 
